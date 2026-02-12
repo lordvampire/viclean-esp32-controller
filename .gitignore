@@ -1,0 +1,41 @@
+# Arduino/ESP32
+*.hex
+*.eep
+*.elf
+*.map
+*.bin
+
+# Build directories
+build/
+*.build/
+
+# IDE files
+.vscode/
+.idea/
+*.code-workspace
+
+# OS files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Compiled Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+
+# Decompiled APK (zu groß für GitHub)
+decompiled/
+
+# Original APK (zu groß)
+*.apk
+
+# Logs
+*.log
+
+# Temporary test files
+test_*.txt
+*.tmp
