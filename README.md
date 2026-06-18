@@ -43,15 +43,26 @@ This project reverse-engineers the ViClean Bluetooth protocol and implements an 
 
 [📖 Documentation](viclean_simple_battery/README.md)
 
-### 3. ViClean Menu (`viclean_menu/`)
+### 3. ViClean Menu (`viclean_menu/`) ⭐ EMPFOHLEN
 
-**Konfigurierbare Version mit Settings-Menü**
+**Konfigurierbare Version mit Settings-Menü - vorläufig finale Version**
 
-- **Basis:** viclean_simple_battery + Settings-Menü
-- **Hauptbildschirm:** W / M / SET Auswahl mit 2 Tasten
-- **Settings:** Pump, Düse, Temp, Harmonic, Pulsation pro Profil einstellbar
-- **Persistenz:** Einstellungen werden im NVS (Flash) gespeichert → überleben Deep Sleep und Stromverlust
-- **Sleep:** Deep Sleep nach 60 Sekunden Inaktivität
+- **Basis:** viclean_simple_battery + vollständiges 2-Tasten Settings-Menü
+- **Hauptbildschirm:** W / M / SET Auswahl (SEL = navigieren, GO = bestätigen)
+- **Settings pro Profil (W/M):** Pump (1-6), Düse (1-6), Temp (1-5), Harmonic (ON/OFF), Pulsation (ON/OFF)
+- **Persistenz:** Einstellungen im NVS (Flash) → überleben Deep Sleep und kompletten Stromverlust
+- **Sleep:** Deep Sleep nach 60s Inaktivität (nicht während Programmausführung)
+- **Display:** Scrollbare Einstellungsliste mit Scroll-Indikatoren (^/v)
+- **4-State Zustandsmaschine:** MAIN → RUNNING / SETTINGS_LIST → SETTINGS_EDIT
+
+#### Bedienung
+
+| Bildschirm | SEL (oben) | GO (unten) |
+|---|---|---|
+| Hauptmenü | W → M → SET wechseln | Programm starten / Settings öffnen |
+| Programm läuft | - | STOP |
+| Einstellungsliste | Cursor nach unten (scrollt automatisch) | Parameter bearbeiten / Speichern / Zurück |
+| Wert bearbeiten | Wert erhöhen (mit Wrap) | Bestätigen |
 
 ### 4. ViClean Serial Bridge V2 (`viclean_serial_bridge_v2/`)
 
@@ -104,15 +115,15 @@ https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32
 
 ### 4. Upload Code
 
-1. Open `viclean_simple/viclean_simple.ino`
+1. Open `viclean_menu/viclean_menu.ino` (empfohlen) oder `viclean_simple/viclean_simple.ino`
 2. Select **Board:** "LilyGo T-Display"
 3. Select **Port:** Your ESP32 port
 4. Click **Upload**
 
 ### 5. Use It!
 
-- Left button: Select W or M
-- Right button: START / STOP
+- Upper button (SEL): Navigate / change values
+- Lower button (GO): Confirm / Start / Stop
 
 ## 📚 Protocol Documentation
 
@@ -304,6 +315,6 @@ For questions or issues, please open a GitHub issue.
 
 ---
 
-**Status:** ✅ Fully functional - All core features working!
+**Status:** ✅ Fully functional - All core features working! Empfohlene Version: `viclean_menu/`
 
-**Last Updated:** February 2026
+**Last Updated:** June 2026

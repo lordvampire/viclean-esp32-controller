@@ -118,6 +118,10 @@ uint8_t editValue = 0;            // Aktueller Wert im Edit-Modus
 #define SETTINGS_SPEICHERN 6
 #define SETTINGS_ZURUECK   7
 
+// === Settings Scroll ===
+#define SETTINGS_VISIBLE 5  // Sichtbare Eintraege bei TextSize 2
+uint8_t scrollOffset = 0;   // Erster sichtbarer Eintrag
+
 // === Sleep State ===
 unsigned long lastActivityTime = 0;
 bool displayDimmed = false;
@@ -365,10 +369,20 @@ void drawRunningScreen() {
 }
 
 // --- STATE_SETTINGS_LIST Anzeige ---
+
+// Scroll-Offset an Cursor anpassen
+void updateScrollOffset() {
+  if (settingsCursor < scrollOffset) {
+    scrollOffset = settingsCursor;
+  } else if (settingsCursor >= scrollOffset + SETTINGS_VISIBLE) {
+    scrollOffset = settingsCursor - SETTINGS_VISIBLE + 1;
+  }
+}
+
 void drawSettingsListScreen() {
   tft.fillScreen(TFT_BLACK);
 
-  // Titel
+  // Titel (TextSize 1)
   tft.setTextSize(1);
   tft.setTextColor(TFT_CYAN, TFT_BLACK);
   tft.setCursor(10, 3);
@@ -384,52 +398,65 @@ void drawSettingsListScreen() {
   tft.setTextColor(TFT_DARKGREY, TFT_BLACK);
   tft.printf("Zzz %lus", remaining);
 
-  // Eintraege
+  // Scroll-Indikatoren
+  if (scrollOffset > 0) {
+    tft.setCursor(200, 16);
+    tft.setTextColor(TFT_DARKGREY, TFT_BLACK);
+    tft.print("^");
+  }
+
+  // Eintraege (TextSize 2)
+  tft.setTextSize(2);
   const int startY = 18;
-  const int lineH = 14;
+  const int lineH = 22;
 
-  for (int i = 0; i < SETTINGS_ITEMS; i++) {
-    int y = startY + i * lineH;
+  updateScrollOffset();
 
-    // Cursor
+  int visibleEnd = min((int)(scrollOffset + SETTINGS_VISIBLE), SETTINGS_ITEMS);
+
+  for (int i = scrollOffset; i < visibleEnd; i++) {
+    int row = i - scrollOffset;
+    int y = startY + row * lineH;
+
+    // Cursor-Pfeil
     if (i == settingsCursor) {
       tft.setTextColor(TFT_GREEN, TFT_BLACK);
-      tft.setCursor(5, y);
+      tft.setCursor(0, y);
       tft.print(">");
     }
 
     // Label + Wert
-    tft.setCursor(15, y);
+    tft.setCursor(18, y);
     switch (i) {
       case SETTINGS_PROFIL:
         if (i == settingsCursor) tft.setTextColor(TFT_YELLOW, TFT_BLACK);
         else tft.setTextColor(TFT_WHITE, TFT_BLACK);
-        tft.printf("Profil:     %s", settingsEditProfile == 0 ? "W" : "M");
+        tft.printf("Profil: %s", settingsEditProfile == 0 ? "W" : "M");
         break;
       case SETTINGS_PUMP:
         if (i == settingsCursor) tft.setTextColor(TFT_GREEN, TFT_BLACK);
         else tft.setTextColor(TFT_WHITE, TFT_BLACK);
-        tft.printf("Pump:       %d", settingsTemp.pump);
+        tft.printf("Pump:   %d", settingsTemp.pump);
         break;
       case SETTINGS_DUESE:
         if (i == settingsCursor) tft.setTextColor(TFT_GREEN, TFT_BLACK);
         else tft.setTextColor(TFT_WHITE, TFT_BLACK);
-        tft.printf("Duese:      %d", settingsTemp.nozzle);
+        tft.printf("Duese:  %d", settingsTemp.nozzle);
         break;
       case SETTINGS_TEMP:
         if (i == settingsCursor) tft.setTextColor(TFT_GREEN, TFT_BLACK);
         else tft.setTextColor(TFT_WHITE, TFT_BLACK);
-        tft.printf("Temp:       %d", settingsTemp.temp);
+        tft.printf("Temp:   %d", settingsTemp.temp);
         break;
       case SETTINGS_HARMONIC:
         if (i == settingsCursor) tft.setTextColor(TFT_GREEN, TFT_BLACK);
         else tft.setTextColor(TFT_WHITE, TFT_BLACK);
-        tft.printf("Harmonic:   %s", settingsTemp.harmonic ? "ON" : "OFF");
+        tft.printf("Harmon: %s", settingsTemp.harmonic ? "ON" : "OFF");
         break;
       case SETTINGS_PULSATION:
         if (i == settingsCursor) tft.setTextColor(TFT_GREEN, TFT_BLACK);
         else tft.setTextColor(TFT_WHITE, TFT_BLACK);
-        tft.printf("Pulsation:  %s", settingsTemp.pulsation ? "ON" : "OFF");
+        tft.printf("Puls:   %s", settingsTemp.pulsation ? "ON" : "OFF");
         break;
       case SETTINGS_SPEICHERN:
         if (i == settingsCursor) tft.setTextColor(TFT_GREEN, TFT_BLACK);
@@ -444,8 +471,15 @@ void drawSettingsListScreen() {
     }
   }
 
-  // Button-Labels
+  // Scroll-nach-unten Indikator
   tft.setTextSize(1);
+  if (visibleEnd < SETTINGS_ITEMS) {
+    tft.setCursor(200, 127);
+    tft.setTextColor(TFT_DARKGREY, TFT_BLACK);
+    tft.print("v");
+  }
+
+  // Button-Labels
   tft.setTextColor(TFT_DARKGREY, TFT_BLACK);
   tft.setCursor(215, 30);
   tft.print("SEL");
@@ -863,6 +897,7 @@ void handleButtonEvents() {
           // SET -> Settings oeffnen
           settingsEditProfile = 0;  // Start mit Profil W
           settingsCursor = 0;
+          scrollOffset = 0;
           loadTempSettings();
           appState = STATE_SETTINGS_LIST;
           drawUI();
