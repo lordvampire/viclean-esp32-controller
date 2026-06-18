@@ -31,7 +31,19 @@ This project reverse-engineers the ViClean Bluetooth protocol and implements an 
 
 [📖 Documentation](viclean_simple/README.md)
 
-### 2. ViClean Serial Bridge V2 (`viclean_serial_bridge_v2/`)
+### 2. ViClean Simple Battery (`viclean_simple_battery/`)
+
+**Batterieschonende Version mit Deep Sleep**
+
+- **Basis:** viclean_simple + automatischer Deep Sleep
+- **Akku:** 450mAh LiPo am T-Display JST-Anschluss
+- **Sleep:** Nach 60 Sekunden Inaktivität → Deep Sleep (~10µA)
+- **Wake-Up:** Beliebiger Button drückt → ESP32 startet neu
+- **Display dimmt** 10 Sekunden vor Sleep als Warnung
+
+[📖 Documentation](viclean_simple_battery/README.md)
+
+### 3. ViClean Serial Bridge V2 (`viclean_serial_bridge_v2/`)
 
 **Advanced version with full control via Serial Monitor**
 
@@ -184,6 +196,11 @@ ViClean/
 │   ├── viclean_simple.ino       # Main code
 │   ├── User_Setup.h             # TFT config
 │   └── README.md                # Documentation
+│
+├── viclean_simple_battery/      # Battery version with Deep Sleep
+│   ├── viclean_simple_battery.ino
+│   ├── User_Setup.h
+│   └── README.md
 │
 ├── viclean_serial_bridge_v2/    # Advanced serial control
 │   ├── viclean_serial_bridge_v2.ino
