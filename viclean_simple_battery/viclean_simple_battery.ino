@@ -222,16 +222,18 @@ void drawUI() {
     tft.print("STOPPED");
   }
 
-  // Button-Beschriftung ganz unten
+  // Button-Beschriftung rechts (neben den physischen Tasten)
+  // Oberer Button (GPIO 35) = SELECT
+  // Unterer Button (GPIO 0) = START/STOP
   tft.setTextSize(1);
   tft.setTextColor(TFT_DARKGREY, TFT_BLACK);
-  tft.setCursor(10, 125);
-  tft.print("SELECT");
-  tft.setCursor(170, 125);
+  tft.setCursor(205, 30);
+  tft.print("SEL");
+  tft.setCursor(205, 115);
   if (programRunning) {
     tft.print("STOP");
   } else {
-    tft.print("START");
+    tft.print("GO");
   }
 }
 
