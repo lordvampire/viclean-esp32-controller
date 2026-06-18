@@ -43,7 +43,17 @@ This project reverse-engineers the ViClean Bluetooth protocol and implements an 
 
 [📖 Documentation](viclean_simple_battery/README.md)
 
-### 3. ViClean Serial Bridge V2 (`viclean_serial_bridge_v2/`)
+### 3. ViClean Menu (`viclean_menu/`)
+
+**Konfigurierbare Version mit Settings-Menü**
+
+- **Basis:** viclean_simple_battery + Settings-Menü
+- **Hauptbildschirm:** W / M / SET Auswahl mit 2 Tasten
+- **Settings:** Pump, Düse, Temp, Harmonic, Pulsation pro Profil einstellbar
+- **Persistenz:** Einstellungen werden im NVS (Flash) gespeichert → überleben Deep Sleep und Stromverlust
+- **Sleep:** Deep Sleep nach 60 Sekunden Inaktivität
+
+### 4. ViClean Serial Bridge V2 (`viclean_serial_bridge_v2/`)
 
 **Advanced version with full control via Serial Monitor**
 
@@ -201,6 +211,10 @@ ViClean/
 │   ├── viclean_simple_battery.ino
 │   ├── User_Setup.h
 │   └── README.md
+│
+├── viclean_menu/                # Configurable version with settings menu
+│   ├── viclean_menu.ino
+│   └── User_Setup.h
 │
 ├── viclean_serial_bridge_v2/    # Advanced serial control
 │   ├── viclean_serial_bridge_v2.ino
